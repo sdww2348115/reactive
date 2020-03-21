@@ -1,12 +1,14 @@
 package com.sdww8591.webflux.config;
 
 import com.sdww8591.webflux.entity.Demo;
+import com.sdww8591.webflux.exception.CustomerException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,7 @@ public class AopConfig {
             if (Demo.class.isInstance(arg)) {
                 if (!check(Demo.class.cast(arg))) {
                     log.info("check failed");
+                    throw new CustomerException(HttpStatus.FORBIDDEN.value(), "check faild");
                 }
             } else if (ServerWebExchange.class.isInstance(arg)) {
                 serverWebExchange = (ServerWebExchange) arg;
@@ -51,7 +54,7 @@ public class AopConfig {
     }
 
     private boolean check(Demo demo) {
-        return true;
+        return false;
     }
 
 
